@@ -8,6 +8,7 @@ matches = (
     .sort_values('date')
     .reset_index(drop=True)
 )
+
 # Home/Away flag and target W/D/L
 matches['home_flag'] = (matches['venue']=='Home').astype(int)
 matches['wdl'] = matches['result'].map({'H':'W','D':'D','A':'L'})
@@ -15,6 +16,7 @@ matches['wdl'] = matches['result'].map({'H':'W','D':'D','A':'L'})
 # 2. Compute rolling features (last 5 games) for team and opponent
 WINDOW = 5
 stats = ['xg','xga','poss','sh','sot','fk','pk','pkatt','dist','attendance']
+
 for s in stats:
     matches[f'{s}_team'] = (
         matches.groupby('team')[s]
@@ -29,6 +31,7 @@ for s in stats:
 team_cols = [f'{s}_team' for s in stats]
 opp_cols  = [f'{s}_opp'  for s in stats]
 feature_cols = team_cols + opp_cols + ['home_flag']
+
 
 # 3. Prepare training data
 X = matches[feature_cols].fillna(0)
